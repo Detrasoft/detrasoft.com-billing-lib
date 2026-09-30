@@ -71,6 +71,51 @@ export interface BillingConfig {
   /** Moeda padrão quando a API não informa. Padrão: `BRL`. */
   currency?: string;
 
+  /** Tema visual das telas ('auto' | 'light' | 'dark' | 'glass'). Padrão: 'auto'. */
+  theme?: 'auto' | 'light' | 'dark' | 'glass';
+
+  /** Cor de destaque principal (ex.: '#3B82F6', '#D946EF'). */
+  brandColor?: string;
+
+  /** Gradiente da marca (ex.: 'linear-gradient(135deg, #FF655B, #D946EF)'). */
+  brandGradient?: string;
+
+  /** Cor do texto sobre a cor principal. Padrão: '#ffffff'. */
+  onBrandColor?: string;
+
+  /** Raio das bordas dos cards (ex.: '16px', '24px'). */
+  cardRadius?: string;
+
+  /** Cor de fundo do card (ex.: '#131926', 'rgba(255, 255, 255, 0.78)'). */
+  cardBackground?: string;
+
+  /** Borda do card (ex.: '1px solid #1E293B', '1px solid rgba(255, 255, 255, 0.12)'). */
+  cardBorder?: string;
+
+  /** Sombra customizada do card. */
+  cardBoxShadow?: string;
+
+  /** Desfoque de fundo do card para glassmorphism (ex.: '16px'). */
+  cardBackdropBlur?: string;
+
+  /** Cor de fundo para seções e cards secundários (ex.: '#0B0F17'). */
+  surfaceSunken?: string;
+
+  /** Cor principal do texto (ex.: '#F8FAFC'). */
+  textColor?: string;
+
+  /** Cor secundária do texto (ex.: '#94A3B8'). */
+  textMutedColor?: string;
+
+  /** Transforma os botões primários em pílula completa. Padrão: false. */
+  buttonPill?: boolean;
+
+  /** Sombra customizada do botão de ação. */
+  buttonBoxShadow?: string;
+
+  /** Classe CSS customizada opcional inserida na raiz das páginas de billing. */
+  customClass?: string;
+
   labels?: Partial<BillingLabels>;
 }
 
@@ -110,8 +155,93 @@ export function resolveBillingConfig(config: BillingConfig): ResolvedBillingConf
     privacyPolicyUrl: config.privacyPolicyUrl ?? '',
     locale: config.locale ?? 'pt-BR',
     currency: config.currency ?? 'BRL',
+    theme: config.theme ?? 'auto',
+    brandColor: config.brandColor ?? '',
+    brandGradient: config.brandGradient ?? '',
+    onBrandColor: config.onBrandColor ?? '#ffffff',
+    cardRadius: config.cardRadius ?? '',
+    cardBackground: config.cardBackground ?? '',
+    cardBorder: config.cardBorder ?? '',
+    cardBoxShadow: config.cardBoxShadow ?? '',
+    cardBackdropBlur: config.cardBackdropBlur ?? '',
+    surfaceSunken: config.surfaceSunken ?? '',
+    textColor: config.textColor ?? '',
+    textMutedColor: config.textMutedColor ?? '',
+    buttonPill: config.buttonPill ?? false,
+    buttonBoxShadow: config.buttonBoxShadow ?? '',
+    customClass: config.customClass ?? '',
     labels: { ...BILLING_DEFAULT_LABELS, ...config.labels },
   };
+}
+
+/**
+ * Constrói o mapa de variáveis CSS a partir da configuração de tema informada.
+ * Aplicado nos contêineres `.dbl-page` para customização em tempo de execução.
+ */
+export function buildBillingThemeStyles(config: ResolvedBillingConfig): Record<string, string> {
+  const styles: Record<string, string> = {};
+
+  if (config.theme === 'dark') {
+    styles['--dbl-surface'] = config.cardBackground || '#131926';
+    styles['--dbl-surface-sunken'] = config.surfaceSunken || '#0B0F17';
+    styles['--dbl-border'] = config.cardBorder || '#1E293B';
+    styles['--dbl-text'] = config.textColor || '#F8FAFC';
+    styles['--dbl-text-muted'] = config.textMutedColor || '#94A3B8';
+    styles['--dbl-text-soft'] = '#64748B';
+    styles['--dbl-shadow'] = config.cardBoxShadow || '0 10px 30px rgba(0, 0, 0, 0.4)';
+  } else if (config.theme === 'light') {
+    styles['--dbl-surface'] = config.cardBackground || '#ffffff';
+    styles['--dbl-surface-sunken'] = config.surfaceSunken || '#f3f0fb';
+    styles['--dbl-border'] = config.cardBorder || 'rgba(137, 111, 244, 0.14)';
+    styles['--dbl-text'] = config.textColor || '#2a2440';
+    styles['--dbl-text-muted'] = config.textMutedColor || '#6b6483';
+    styles['--dbl-shadow'] = config.cardBoxShadow || '0 10px 30px rgba(42, 36, 64, 0.08)';
+  } else if (config.theme === 'glass') {
+    styles['--dbl-surface'] = config.cardBackground || 'rgba(255, 255, 255, 0.78)';
+    styles['--dbl-surface-sunken'] = config.surfaceSunken || 'rgba(255, 255, 255, 0.4)';
+    styles['--dbl-border'] = config.cardBorder || 'rgba(255, 255, 255, 0.65)';
+    styles['--dbl-backdrop-blur'] = config.cardBackdropBlur || 'blur(16px)';
+  }
+
+  // Sobrescritas explícitas
+  if (config.cardBackground) styles['--dbl-surface'] = config.cardBackground;
+  if (config.surfaceSunken) styles['--dbl-surface-sunken'] = config.surfaceSunken;
+  if (config.cardBorder) styles['--dbl-border'] = config.cardBorder;
+  if (config.cardRadius) styles['--dbl-radius-lg'] = config.cardRadius;
+  if (config.cardBoxShadow) styles['--dbl-shadow'] = config.cardBoxShadow;
+  if (config.cardBackdropBlur) styles['--dbl-backdrop-blur'] = config.cardBackdropBlur;
+  if (config.textColor) styles['--dbl-text'] = config.textColor;
+  if (config.textMutedColor) styles['--dbl-text-muted'] = config.textMutedColor;
+  if (config.onBrandColor) styles['--dbl-on-primary'] = config.onBrandColor;
+
+  if (config.brandColor) {
+    styles['--dbl-primary'] = config.brandColor;
+    styles['--dbl-primary-strong'] = config.brandColor;
+    styles['--dbl-primary-hover'] = config.brandColor;
+    styles['--dbl-primary-soft'] = `color-mix(in srgb, ${config.brandColor} 14%, transparent)`;
+  }
+  if (config.brandGradient) {
+    styles['--dbl-brand-gradient'] = config.brandGradient;
+  }
+  if (config.buttonPill) {
+    styles['--dbl-button-radius'] = '9999px';
+  }
+  if (config.buttonBoxShadow) {
+    styles['--dbl-button-shadow'] = config.buttonBoxShadow;
+  }
+
+  return styles;
+}
+
+export function resolveBillingThemeClass(config: ResolvedBillingConfig): string {
+  const classes: string[] = [];
+  if (config.theme && config.theme !== 'auto') {
+    classes.push(`dbl-theme-${config.theme}`);
+  }
+  if (config.customClass) {
+    classes.push(config.customClass);
+  }
+  return classes.join(' ');
 }
 
 /**

@@ -1,12 +1,92 @@
 /*
  * Camada visual compartilhada pelas telas da @detrasoft.com/billing.
  *
- * Só usa custom properties `--dbl-*` com fallback literal: a lib tem aparência
- * coerente sozinha e se integra ao design system do hospedeiro quando ele
- * redireciona esses tokens (ver README).
+ * Só usa custom properties `--dbl-*` com fallback literal e herdado das variáveis
+ * do app hospedeiro (--note-*, --dwa-*, --color-*), garantindo coerência visual
+ * automática em temas claros, escuros e glassmorphism.
  *
  * Importe com `@use '../../styles/billing-shared' as *;` no SCSS do componente.
  */
+
+:root {
+  --dbl-primary: var(--note-primary, var(--dwa-primary, var(--color-primary, #3B82F6)));
+  --dbl-primary-hover: var(--note-primary-hover, var(--dwa-primary-hover, var(--color-primary-hover, #2563EB)));
+  --dbl-primary-strong: var(--note-primary-hover, var(--dwa-primary-strong, var(--color-primary-strong, #60A5FA)));
+  --dbl-primary-soft: rgba(var(--dbl-primary-rgb, 59, 130, 246), 0.14);
+  --dbl-on-primary: #ffffff;
+  --dbl-radius-lg: var(--note-radius, var(--dwa-radius-lg, var(--card-radius, 20px)));
+  --dbl-radius-md: var(--note-radius-sm, var(--dwa-radius-md, 14px));
+  --dbl-radius-sm: 8px;
+  --dbl-surface: var(--note-surface, var(--dwa-surface, var(--color-surface, #ffffff)));
+  --dbl-surface-sunken: var(--note-surface-hover, var(--dwa-surface-sunken, var(--color-surface-hover, #f3f0fb)));
+  --dbl-border: var(--note-border, var(--dwa-border, var(--color-border, rgba(59, 130, 246, 0.14))));
+  --dbl-text: var(--note-text, var(--dwa-text, var(--color-text, #2a2440)));
+  --dbl-text-muted: var(--note-text-muted, var(--dwa-text-muted, var(--color-text-muted, #6b6483)));
+  --dbl-text-soft: #9a92b5;
+  --dbl-shadow: var(--dwa-shadow, 0 10px 30px rgba(0, 0, 0, 0.08));
+  --dbl-transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --dbl-surface: var(--note-surface, var(--dwa-surface, #131926));
+    --dbl-surface-sunken: var(--note-surface-hover, var(--dwa-surface-sunken, #0B0F17));
+    --dbl-border: var(--note-border, var(--dwa-border, #1E293B));
+    --dbl-text: var(--note-text, var(--dwa-text, #F8FAFC));
+    --dbl-text-muted: var(--note-text-muted, var(--dwa-text-muted, #94A3B8));
+    --dbl-text-soft: #64748B;
+    --dbl-primary: var(--note-primary, var(--dwa-primary, #3B82F6));
+    --dbl-primary-hover: var(--note-primary-hover, var(--dwa-primary-hover, #2563EB));
+    --dbl-primary-strong: var(--note-primary-hover, var(--dwa-primary-strong, #60A5FA));
+    --dbl-primary-soft: rgba(59, 130, 246, 0.14);
+    --dbl-shadow: var(--dwa-shadow, 0 10px 30px rgba(0, 0, 0, 0.35));
+  }
+}
+
+body:has([class*="note-"]),
+.note-app-shell,
+html.dark,
+[data-theme="dark"],
+.dark,
+.theme-dark,
+.dbl-theme-dark {
+  --dbl-surface: var(--note-surface, var(--dwa-surface, #131926));
+  --dbl-surface-sunken: var(--note-surface-hover, var(--dwa-surface-sunken, #0B0F17));
+  --dbl-border: var(--note-border, var(--dwa-border, #1E293B));
+  --dbl-text: var(--note-text, var(--dwa-text, #F8FAFC));
+  --dbl-text-muted: var(--note-text-muted, var(--dwa-text-muted, #94A3B8));
+  --dbl-text-soft: #64748B;
+  --dbl-primary: var(--note-primary, var(--dwa-primary, #3B82F6));
+  --dbl-primary-hover: var(--note-primary-hover, var(--dwa-primary-hover, #2563EB));
+  --dbl-primary-strong: var(--note-primary-hover, var(--dwa-primary-strong, #60A5FA));
+  --dbl-primary-soft: rgba(59, 130, 246, 0.14);
+  --dbl-shadow: var(--dwa-shadow, 0 10px 30px rgba(0, 0, 0, 0.4));
+
+  --dbl-info: #60A5FA;
+  --dbl-info-strong: #93C5FD;
+  --dbl-info-soft: rgba(96, 165, 250, 0.16);
+
+  --dbl-warning: #FBBF24;
+  --dbl-warning-strong: #FDE047;
+  --dbl-warning-soft: rgba(251, 191, 36, 0.16);
+
+  --dbl-danger: #F87171;
+  --dbl-danger-strong: #FCA5A5;
+  --dbl-danger-soft: rgba(248, 113, 113, 0.16);
+
+  --dbl-success: #34D399;
+  --dbl-success-strong: #6EE7B7;
+  --dbl-success-soft: rgba(52, 211, 153, 0.16);
+}
+
+.dbl-theme-glass {
+  --dbl-surface: var(--tabfy-card-bg, rgba(255, 255, 255, 0.78));
+  --dbl-surface-sunken: var(--tabfy-surface, rgba(255, 255, 255, 0.5));
+  --dbl-border: var(--tabfy-card-border, rgba(255, 255, 255, 0.75));
+  --dbl-backdrop-blur: var(--tabfy-glass-blur, blur(16px));
+  --dbl-radius-lg: var(--tabfy-radius-card, 24px);
+  --dbl-shadow: var(--tabfy-card-shadow, 0 10px 24px rgba(0, 0, 0, 0.04));
+}
 
 .dbl-page {
   min-height: 100%;
@@ -32,9 +112,11 @@
   box-sizing: border-box;
   background: var(--dbl-surface, #ffffff);
   border-radius: var(--dbl-radius-lg, 20px);
-  box-shadow: var(--dbl-shadow, 0 10px 30px rgba(42, 36, 64, 0.08));
+  box-shadow: var(--dbl-shadow, 0 10px 30px rgba(0, 0, 0, 0.08));
   border: 1px solid var(--dbl-border, rgba(137, 111, 244, 0.14));
   color: var(--dbl-text, #2a2440);
+  backdrop-filter: var(--dbl-backdrop-blur, none);
+  -webkit-backdrop-filter: var(--dbl-backdrop-blur, none);
 }
 
 .dbl-section-title {
@@ -60,7 +142,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--dbl-primary-strong, #5b44b0);
+  color: var(--dbl-primary, var(--dbl-primary-strong, #3B82F6));
 }
 
 /* ── Selos de status ──────────────────────────────────────────────────── */

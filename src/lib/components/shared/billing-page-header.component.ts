@@ -52,7 +52,10 @@ import { Router } from '@angular/router';
         padding: 1.25rem 1.5rem;
         background: var(--dbl-surface, #ffffff);
         border-radius: var(--dbl-radius-lg, 20px);
-        box-shadow: var(--dbl-shadow, 0 10px 30px rgba(42, 36, 64, 0.08));
+        box-shadow: var(--dbl-shadow, 0 10px 30px rgba(0, 0, 0, 0.08));
+        border: 1px solid var(--dbl-border, transparent);
+        backdrop-filter: var(--dbl-backdrop-blur, none);
+        -webkit-backdrop-filter: var(--dbl-backdrop-blur, none);
       }
 
       .dbl-header__head {
@@ -68,16 +71,17 @@ import { Router } from '@angular/router';
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border: 0;
+        border: 1px solid var(--dbl-border, transparent);
         cursor: pointer;
-        border-radius: 12px;
-        background: var(--dbl-primary-soft, rgba(137, 111, 244, 0.1));
-        color: var(--dbl-primary-strong, #5b44b0);
-        transition: transform var(--dbl-transition, 180ms ease);
+        border-radius: var(--dbl-button-radius, var(--dbl-radius-md, 12px));
+        background: var(--dbl-primary-soft, rgba(59, 130, 246, 0.12));
+        color: var(--dbl-primary, var(--dbl-primary-strong, #3B82F6));
+        transition: transform var(--dbl-transition, 180ms ease), background var(--dbl-transition, 180ms ease);
       }
 
       .dbl-header__back:hover {
         transform: translateX(-2px);
+        filter: brightness(1.06);
       }
 
       .dbl-header__copy {
@@ -92,7 +96,7 @@ import { Router } from '@angular/router';
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--dbl-primary-strong, #5b44b0);
+        color: var(--dbl-primary, var(--dbl-primary-strong, #3B82F6));
       }
 
       h1 {

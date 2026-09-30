@@ -1,4 +1,4 @@
-<div class="dbl-page">
+<div class="dbl-page" [class]="themeClass()" [ngStyle]="themeStyles()">
   <div class="dbl-container dbl-stack">
     @if (showHeader()) {
       <dbl-page-header

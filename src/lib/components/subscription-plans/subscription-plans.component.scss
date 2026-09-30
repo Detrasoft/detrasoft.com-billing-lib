@@ -13,6 +13,7 @@
   padding: 0.3rem;
   border-radius: 999px;
   background: var(--dbl-surface-sunken, #f3f0fb);
+  border: 1px solid var(--dbl-border, rgba(137, 111, 244, 0.14));
   box-shadow: var(--dbl-shadow-inset, inset 0 1px 3px rgba(42, 36, 64, 0.08));
 }
 
@@ -22,7 +23,7 @@
   gap: 0.45rem;
   min-height: 40px;
   padding: 0 1.15rem;
-  border: 0;
+  border: 1px solid transparent;
   cursor: pointer;
   font: inherit;
   font-size: 0.88rem;
@@ -32,11 +33,13 @@
   color: var(--dbl-text-muted, #6b6483);
   transition:
     background var(--dbl-transition, 180ms ease),
-    color var(--dbl-transition, 180ms ease);
+    color var(--dbl-transition, 180ms ease),
+    border-color var(--dbl-transition, 180ms ease);
 
   &--on {
     background: var(--dbl-surface, #ffffff);
-    color: var(--dbl-primary-strong, #5b44b0);
+    color: var(--dbl-primary, #5b44b0);
+    border-color: var(--dbl-border, rgba(137, 111, 244, 0.18));
     box-shadow: var(--dbl-shadow-sm, 0 2px 8px rgba(42, 36, 64, 0.1));
   }
 }
@@ -100,7 +103,7 @@
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.02em;
-  background: var(--dbl-primary, #896ff4);
+  background: var(--dbl-brand-gradient, var(--dbl-primary, #896ff4));
   color: var(--dbl-on-primary, #ffffff);
   box-shadow: var(--dbl-shadow-sm, 0 2px 8px rgba(42, 36, 64, 0.16));
 }

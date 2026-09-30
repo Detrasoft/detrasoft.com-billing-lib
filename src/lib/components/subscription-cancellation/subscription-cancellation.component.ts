@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ButtonComponent, ToastService } from '@detrasoft.com/detra-ng';
 
-import { BILLING_CONFIG } from '../../billing.config';
+import { BILLING_CONFIG, buildBillingThemeStyles, resolveBillingThemeClass } from '../../billing.config';
 import { BillingApiService } from '../../services/billing-api.service';
 import { BillingStore } from '../../services/billing.store';
 import { cancelDate } from '../../models/billing.model';
@@ -25,6 +25,9 @@ export class SubscriptionCancellationComponent implements OnInit {
   private readonly toast = inject(ToastService);
   private readonly router = inject(Router);
   private readonly config = inject(BILLING_CONFIG);
+
+  readonly themeStyles = computed(() => buildBillingThemeStyles(this.config));
+  readonly themeClass = computed(() => resolveBillingThemeClass(this.config));
 
   readonly showHeader = input(true, {
     transform: (v: unknown) => (v === undefined || v === null || v === '' ? true : v !== false && v !== 'false'),

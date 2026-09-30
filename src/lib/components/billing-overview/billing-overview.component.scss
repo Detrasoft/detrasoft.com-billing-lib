@@ -126,6 +126,7 @@
   font-size: 0.88rem;
   border-radius: var(--dbl-radius-md, 14px);
   background: var(--dbl-surface-sunken, #f3f0fb);
+  border: 1px dashed var(--dbl-border, rgba(137, 111, 244, 0.16));
   color: var(--dbl-text-muted, #6b6483);
 }
 
@@ -145,6 +146,7 @@
   padding: 0.85rem 1rem;
   border-radius: var(--dbl-radius-md, 14px);
   background: var(--dbl-surface-sunken, #f3f0fb);
+  border: 1px solid var(--dbl-border, rgba(137, 111, 244, 0.12));
 }
 
 .dbl-invoices__info {

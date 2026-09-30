@@ -137,6 +137,7 @@
   padding: 0.7rem 0.9rem;
   border-radius: var(--dbl-radius-md, 14px);
   background: var(--dbl-surface-sunken, #f3f0fb);
+  border: 1px solid var(--dbl-border, rgba(137, 111, 244, 0.12));
 }
 
 .dbl-lines__info {
@@ -172,6 +173,7 @@
   padding: 1rem 1.15rem;
   border-radius: var(--dbl-radius-md, 14px);
   background: var(--dbl-primary-soft, rgba(137, 111, 244, 0.12));
+  border: 1px solid var(--dbl-border, rgba(137, 111, 244, 0.2));
 
   small {
     display: block;

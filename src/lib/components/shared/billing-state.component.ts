@@ -69,7 +69,10 @@ import { CommonModule } from '@angular/common';
         padding: 1.5rem;
         background: var(--dbl-surface, #ffffff);
         border-radius: var(--dbl-radius-lg, 20px);
-        box-shadow: var(--dbl-shadow, 0 10px 30px rgba(42, 36, 64, 0.08));
+        box-shadow: var(--dbl-shadow, 0 10px 30px rgba(0, 0, 0, 0.08));
+        border: 1px solid var(--dbl-border, transparent);
+        backdrop-filter: var(--dbl-backdrop-blur, none);
+        -webkit-backdrop-filter: var(--dbl-backdrop-blur, none);
       }
 
       .dbl-state__box {
@@ -84,7 +87,7 @@ import { CommonModule } from '@angular/common';
         justify-items: center;
         padding: 2rem 1rem;
         font-size: 1.5rem;
-        color: var(--dbl-primary, #896ff4);
+        color: var(--dbl-primary, #3B82F6);
       }
 
       .dbl-state__spinner p {
@@ -95,7 +98,12 @@ import { CommonModule } from '@angular/common';
 
       .dbl-state__icon {
         font-size: 1.75rem;
-        color: var(--dbl-primary, #896ff4);
+        color: var(--dbl-primary, #3B82F6);
+      }
+
+      .dbl-state[role="alert"] .dbl-state__icon,
+      .dbl-state__box[role="alert"] .dbl-state__icon {
+        color: var(--dbl-warning, #F59E0B);
       }
 
       h2 {
@@ -133,14 +141,23 @@ import { CommonModule } from '@angular/common';
 
       .dbl-state__retry {
         justify-self: center;
-        min-height: 44px;
-        padding: 0.65rem 1.25rem;
+        min-height: 42px;
+        padding: 0.65rem 1.4rem;
         border: 0;
         cursor: pointer;
+        font-family: inherit;
         font-weight: 700;
-        border-radius: var(--dbl-radius-md, 14px);
+        font-size: 0.9rem;
+        border-radius: var(--dbl-button-radius, var(--dbl-radius-md, 14px));
         color: var(--dbl-on-primary, #ffffff);
-        background: var(--dbl-primary, #896ff4);
+        background: var(--dbl-brand-gradient, var(--dbl-primary, #3B82F6));
+        box-shadow: var(--dbl-button-shadow, 0 4px 14px color-mix(in srgb, var(--dbl-primary, #3B82F6) 32%, transparent));
+        transition: transform var(--dbl-transition, 180ms ease), filter 180ms ease, box-shadow 180ms ease;
+      }
+
+      .dbl-state__retry:hover {
+        transform: translateY(-1.5px);
+        filter: brightness(1.08);
       }
 
       @keyframes dbl-shimmer {

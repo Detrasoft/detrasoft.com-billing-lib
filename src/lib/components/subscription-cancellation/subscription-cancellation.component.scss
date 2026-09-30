@@ -125,6 +125,7 @@
   cursor: pointer;
   border-radius: var(--dbl-radius-md, 14px);
   background: var(--dbl-surface-sunken, #f3f0fb);
+  border: 1px solid var(--dbl-border, rgba(137, 111, 244, 0.12));
   transition: background var(--dbl-transition, 180ms ease);
 
   &:hover {
