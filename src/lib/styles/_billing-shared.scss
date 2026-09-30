@@ -1,0 +1,246 @@
+/*
+ * Camada visual compartilhada pelas telas da @detrasoft.com/billing.
+ *
+ * Só usa custom properties `--dbl-*` com fallback literal: a lib tem aparência
+ * coerente sozinha e se integra ao design system do hospedeiro quando ele
+ * redireciona esses tokens (ver README).
+ *
+ * Importe com `@use '../../styles/billing-shared' as *;` no SCSS do componente.
+ */
+
+.dbl-page {
+  min-height: 100%;
+  padding: 1rem 1rem 4rem;
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+  color: var(--dbl-text, #2a2440);
+}
+
+.dbl-container {
+  width: 100%;
+  max-width: var(--dbl-container-max, 1080px);
+  margin: 0 auto;
+}
+
+.dbl-stack {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.dbl-card {
+  padding: 1.5rem;
+  box-sizing: border-box;
+  background: var(--dbl-surface, #ffffff);
+  border-radius: var(--dbl-radius-lg, 20px);
+  box-shadow: var(--dbl-shadow, 0 10px 30px rgba(42, 36, 64, 0.08));
+  border: 1px solid var(--dbl-border, rgba(137, 111, 244, 0.14));
+  color: var(--dbl-text, #2a2440);
+}
+
+.dbl-section-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+
+  strong {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--dbl-text, #2a2440);
+  }
+
+  small {
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: var(--dbl-text-muted, #6b6483);
+  }
+}
+
+.dbl-eyebrow {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dbl-primary-strong, #5b44b0);
+}
+
+/* ── Selos de status ──────────────────────────────────────────────────── */
+
+.dbl-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: var(--dbl-surface-sunken, #f3f0fb);
+  color: var(--dbl-text-muted, #6b6483);
+
+  &--success {
+    background: var(--dbl-success-soft, rgba(34, 197, 94, 0.12));
+    color: var(--dbl-success-strong, #16a34a);
+  }
+
+  &--warning {
+    background: var(--dbl-warning-soft, rgba(234, 179, 8, 0.14));
+    color: var(--dbl-warning-strong, #a16207);
+  }
+
+  &--danger {
+    background: var(--dbl-danger-soft, rgba(248, 113, 113, 0.14));
+    color: var(--dbl-danger-strong, #b91c1c);
+  }
+
+  &--info {
+    background: var(--dbl-info-soft, rgba(96, 165, 250, 0.12));
+    color: var(--dbl-info-strong, #1d4ed8);
+  }
+
+  &--primary {
+    background: var(--dbl-primary-soft, rgba(137, 111, 244, 0.14));
+    color: var(--dbl-primary-strong, #5b44b0);
+  }
+}
+
+/* ── Avisos ───────────────────────────────────────────────────────────── */
+
+.dbl-note {
+  display: flex;
+  gap: 0.7rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--dbl-radius-md, 14px);
+  background: var(--dbl-info-soft, rgba(96, 165, 250, 0.12));
+  color: var(--dbl-info-strong, #1d4ed8);
+
+  i {
+    flex: 0 0 auto;
+    margin-top: 0.15rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  &--warning {
+    background: var(--dbl-warning-soft, rgba(234, 179, 8, 0.14));
+    color: var(--dbl-warning-strong, #a16207);
+  }
+
+  &--danger {
+    background: var(--dbl-danger-soft, rgba(248, 113, 113, 0.14));
+    color: var(--dbl-danger-strong, #b91c1c);
+  }
+
+  &--success {
+    background: var(--dbl-success-soft, rgba(34, 197, 94, 0.12));
+    color: var(--dbl-success-strong, #16a34a);
+  }
+}
+
+.dbl-divider {
+  height: 1px;
+  border: 0;
+  margin: 0.25rem 0;
+  background: var(--dbl-border, rgba(42, 36, 64, 0.1));
+}
+
+/* ── Grade de detalhes ────────────────────────────────────────────────── */
+
+.dbl-detail-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.dbl-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--dbl-radius-md, 14px);
+  background: var(--dbl-surface-sunken, #f3f0fb);
+
+  span {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--dbl-text-soft, #9a92b5);
+  }
+
+  strong {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--dbl-text, #2a2440);
+  }
+
+  small {
+    font-size: 0.78rem;
+    color: var(--dbl-text-muted, #6b6483);
+  }
+
+  &--full {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ── Ações ────────────────────────────────────────────────────────────── */
+
+.dbl-actions {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.dbl-actions--end {
+  justify-content: flex-end;
+}
+
+.dbl-icon-btn {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  cursor: pointer;
+  font-size: 0.82rem;
+  border-radius: 10px;
+  background: var(--dbl-surface-sunken, #f3f0fb);
+  color: var(--dbl-text-muted, #6b6483);
+  transition: background var(--dbl-transition, 180ms ease), color var(--dbl-transition, 180ms ease);
+
+  &:hover:not(:disabled) {
+    background: var(--dbl-primary-soft, rgba(137, 111, 244, 0.14));
+    color: var(--dbl-primary-strong, #5b44b0);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+/* ── Responsivo ───────────────────────────────────────────────────────── */
+
+@media (min-width: 768px) {
+  .dbl-page {
+    padding: 1.5rem 1.5rem 4rem;
+  }
+
+  .dbl-detail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .dbl-card {
+    padding: 1rem;
+    border-radius: var(--dbl-radius-md, 16px);
+  }
+
+  .dbl-actions {
+    flex-direction: column-reverse;
+  }
+}

@@ -1,0 +1,196 @@
+@use '../../styles/billing-shared' as *;
+
+:host {
+  display: block;
+}
+
+/* ── Alternância mensal / anual ───────────────────────────────────────── */
+
+.dbl-toggle {
+  display: inline-flex;
+  align-self: center;
+  justify-self: center;
+  padding: 0.3rem;
+  border-radius: 999px;
+  background: var(--dbl-surface-sunken, #f3f0fb);
+  box-shadow: var(--dbl-shadow-inset, inset 0 1px 3px rgba(42, 36, 64, 0.08));
+}
+
+.dbl-toggle__option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 40px;
+  padding: 0 1.15rem;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--dbl-text-muted, #6b6483);
+  transition:
+    background var(--dbl-transition, 180ms ease),
+    color var(--dbl-transition, 180ms ease);
+
+  &--on {
+    background: var(--dbl-surface, #ffffff);
+    color: var(--dbl-primary-strong, #5b44b0);
+    box-shadow: var(--dbl-shadow-sm, 0 2px 8px rgba(42, 36, 64, 0.1));
+  }
+}
+
+.dbl-toggle__save {
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  background: var(--dbl-success-soft, rgba(34, 197, 94, 0.14));
+  color: var(--dbl-success-strong, #16a34a);
+}
+
+/* ── Cards de plano ───────────────────────────────────────────────────── */
+
+.dbl-plans {
+  display: grid;
+  gap: 1rem;
+}
+
+.dbl-plan-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  background: var(--dbl-surface, #ffffff);
+  border-radius: var(--dbl-radius-lg, 20px);
+  border: 1.5px solid var(--dbl-border, rgba(137, 111, 244, 0.14));
+  box-shadow: var(--dbl-shadow, 0 10px 30px rgba(42, 36, 64, 0.08));
+  transition:
+    transform var(--dbl-transition, 220ms ease),
+    box-shadow var(--dbl-transition, 220ms ease);
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--dbl-shadow-lg, 0 18px 44px rgba(42, 36, 64, 0.14));
+  }
+
+  &--featured {
+    border-color: var(--dbl-primary, #896ff4);
+  }
+
+  &--current {
+    border-color: var(--dbl-success, #22c55e);
+  }
+}
+
+.dbl-plan-card__ribbon {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.85rem;
+  white-space: nowrap;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  background: var(--dbl-primary, #896ff4);
+  color: var(--dbl-on-primary, #ffffff);
+  box-shadow: var(--dbl-shadow-sm, 0 2px 8px rgba(42, 36, 64, 0.16));
+}
+
+.dbl-plan-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+
+  h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--dbl-text, #2a2440);
+  }
+}
+
+.dbl-plan-card__price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+
+  strong {
+    font-size: clamp(1.9rem, 5vw, 2.4rem);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--dbl-text, #2a2440);
+  }
+
+  span {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--dbl-text-muted, #6b6483);
+  }
+}
+
+.dbl-plan-card__footnote {
+  margin: -0.35rem 0 0;
+  font-size: 0.8rem;
+  color: var(--dbl-text-soft, #9a92b5);
+}
+
+.dbl-plan-card__intro {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--dbl-text-muted, #6b6483);
+}
+
+.dbl-plan-card__features {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.5rem;
+  flex: 1 1 auto;
+
+  li {
+    display: flex;
+    gap: 0.55rem;
+    font-size: 0.86rem;
+    line-height: 1.45;
+    color: var(--dbl-text, #2a2440);
+  }
+
+  i {
+    flex: 0 0 auto;
+    margin-top: 0.18rem;
+    font-size: 0.82rem;
+    color: var(--dbl-success-strong, #16a34a);
+  }
+}
+
+.dbl-plan-card__cta {
+  margin-top: auto;
+  padding-top: 0.35rem;
+}
+
+.dbl-plans__note {
+  margin: 0;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--dbl-text-soft, #9a92b5);
+}
+
+@media (min-width: 720px) {
+  .dbl-plans {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    align-items: stretch;
+  }
+}

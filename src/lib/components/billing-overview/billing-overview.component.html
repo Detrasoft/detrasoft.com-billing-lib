@@ -1,0 +1,181 @@
+<div class="dbl-page">
+  <div class="dbl-container dbl-stack">
+    @if (showHeader()) {
+      <dbl-page-header
+        eyebrow="Conta"
+        [title]="labels.overviewTitle"
+        [description]="labels.overviewDescription"
+        [backLink]="backPath"
+      />
+    }
+
+    @if (store.loading() && !store.loaded()) {
+      <dbl-state mode="loading" loadingLabel="Carregando dados da conta" />
+    } @else if (store.error()) {
+      <dbl-state mode="error" [message]="store.error()!" (retry)="reload()" />
+    } @else {
+      <!-- Plano atual -->
+      <section class="dbl-card dbl-plan">
+        <div class="dbl-plan__head">
+          <div class="dbl-plan__identity">
+            <span class="dbl-eyebrow">Plano atual</span>
+            <h2>{{ planName() }}</h2>
+            <p>{{ store.accountName() }}</p>
+          </div>
+          <span class="dbl-badge" [class]="statusBadge().tone">{{ statusBadge().label }}</span>
+        </div>
+
+        @if (cancelScheduled()) {
+          <div class="dbl-note dbl-note--warning">
+            <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+            <p>
+              Cancelamento agendado. Você mantém o acesso até
+              <strong>{{ date(cancelOn()) }}</strong>
+              @if (daysToCancel() > 0) {
+                ({{ daysToCancel() }} {{ daysToCancel() === 1 ? 'dia' : 'dias' }} restantes).
+              }
+            </p>
+          </div>
+        }
+
+        @if (subscription()) {
+          <div class="dbl-detail-grid">
+            <div class="dbl-detail">
+              <span>Valor</span>
+              <strong>{{ amountLabel() }}</strong>
+              @if (subscription()?.quantity && subscription()!.quantity! > 1) {
+                <small>{{ subscription()!.quantity }} usuários</small>
+              }
+            </div>
+
+            <div class="dbl-detail">
+              <span>{{ isTrialing() ? 'Fim do teste' : 'Próxima cobrança' }}</span>
+              <strong>
+                {{ isTrialing() ? date(subscription()?.trialEnd) : date(subscription()?.currentPeriodEnd) }}
+              </strong>
+            </div>
+
+            <div class="dbl-detail dbl-detail--full">
+              <span>Ciclo atual</span>
+              <strong>
+                {{ date(subscription()?.currentPeriodStart) }} –
+                {{ date(subscription()?.currentPeriodEnd) }}
+              </strong>
+              @if (isAppleManaged()) {
+                <small>Assinatura gerenciada pela App Store.</small>
+              }
+            </div>
+          </div>
+        } @else {
+          <div class="dbl-note">
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+            <p>
+              Você está no plano gratuito. Conheça os planos pagos para liberar mais recursos do
+              workspace.
+            </p>
+          </div>
+        }
+
+        <div class="dbl-actions dbl-actions--end">
+          @if (canManageInApp()) {
+            <ds-button variant="primary" (click)="goToPlans()">
+              {{ subscription() ? 'Alterar plano' : 'Ver planos' }}
+            </ds-button>
+            @if (isActive() && !cancelScheduled()) {
+              <ds-button variant="outline" (click)="goToCancel()">Cancelar assinatura</ds-button>
+            }
+          } @else {
+            <ds-button variant="primary" (click)="manageOnAppStore()">
+              <i class="fa-brands fa-apple" aria-hidden="true"></i>
+              Gerenciar na App Store
+            </ds-button>
+            <ds-button variant="outline" (click)="goToPlans()">Ver planos</ds-button>
+          }
+        </div>
+
+        @if (isAppleManaged()) {
+          <p class="dbl-plan__apple-note">
+            Assinaturas compradas no aplicativo iOS são administradas pela Apple. Alterações de
+            plano e cancelamento acontecem nos ajustes da sua conta na App Store.
+          </p>
+        }
+      </section>
+
+      <!-- Consumo do workspace -->
+      @if (hasUsageMeters()) {
+        <section class="dbl-card dbl-usage">
+          <div class="dbl-section-title">
+            <strong>Consumo do workspace</strong>
+            <small>Acompanhe os limites do seu plano atual.</small>
+          </div>
+
+          <div class="dbl-usage__list">
+            @for (meter of usageMeters(); track meter.label) {
+              <div class="dbl-usage__item">
+                <div class="dbl-usage__label">
+                  <strong>{{ meter.label }}</strong>
+                  <small>{{ meter.usedLabel }} de {{ meter.limitLabel }}</small>
+                </div>
+                <div
+                  class="dbl-usage__track"
+                  role="progressbar"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  [attr.aria-valuenow]="meter.percent"
+                  [attr.aria-label]="meter.label"
+                >
+                  <span
+                    class="dbl-usage__bar"
+                    [class]="'dbl-usage__bar--' + meter.severity"
+                    [style.width.%]="meter.percent"
+                  ></span>
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      <!-- Histórico de faturas -->
+      @if (canManageInApp()) {
+        <section class="dbl-card dbl-invoices">
+          <div class="dbl-section-title">
+            <strong>Histórico de faturas</strong>
+            <small>Baixe os comprovantes emitidos para esta conta.</small>
+          </div>
+
+          @if (store.invoices().length === 0) {
+            <p class="dbl-invoices__empty">
+              Nenhuma fatura emitida ainda. Elas aparecem aqui após a primeira cobrança.
+            </p>
+          } @else {
+            <ul class="dbl-invoices__list">
+              @for (invoice of store.invoices(); track invoice.id) {
+                <li class="dbl-invoices__row">
+                  <div class="dbl-invoices__info">
+                    <strong>{{ invoiceLabel(invoice) }}</strong>
+                    <small>{{ date(invoice.created) }}</small>
+                  </div>
+                  <span class="dbl-invoices__amount">{{ invoiceAmount(invoice) }}</span>
+                  <span class="dbl-badge" [class]="invoiceStatus(invoice).tone">
+                    {{ invoiceStatus(invoice).label }}
+                  </span>
+                  <button
+                    type="button"
+                    class="dbl-icon-btn"
+                    title="Baixar fatura"
+                    aria-label="Baixar fatura"
+                    [disabled]="!invoice.downloadUrl"
+                    (click)="downloadInvoice(invoice)"
+                  >
+                    <i class="fa-solid fa-download" aria-hidden="true"></i>
+                  </button>
+                </li>
+              }
+            </ul>
+          }
+        </section>
+      }
+    }
+  </div>
+</div>

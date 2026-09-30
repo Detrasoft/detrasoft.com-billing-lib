@@ -1,0 +1,32 @@
+{
+  "name": "@detrasoft.com/billing",
+  "version": "0.1.0",
+  "description": "Conta e assinatura (Stripe + Apple IAP) para produtos Detrasoft. Consome o detrasoft-core-api e o design system @detrasoft.com/detra-ng.",
+  "keywords": [
+    "detrasoft",
+    "angular",
+    "billing",
+    "subscription",
+    "stripe",
+    "apple-iap"
+  ],
+  "license": "UNLICENSED",
+  "sideEffects": false,
+  "peerDependencies": {
+    "@angular/common": ">=18.0.0 <21.0.0",
+    "@angular/core": ">=18.0.0 <21.0.0",
+    "@angular/forms": ">=18.0.0 <21.0.0",
+    "@angular/router": ">=18.0.0 <21.0.0",
+    "@capacitor/core": ">=6.0.0",
+    "@detrasoft.com/detra-ng": ">=0.6.23",
+    "cordova-plugin-purchase": ">=13.0.0",
+    "rxjs": ">=7.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@capacitor/core": { "optional": true },
+    "cordova-plugin-purchase": { "optional": true }
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  }
+}

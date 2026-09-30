@@ -1,0 +1,131 @@
+<div class="dbl-page">
+  <div class="dbl-container dbl-stack">
+    @if (showHeader()) {
+      <dbl-page-header
+        eyebrow="Conta"
+        [title]="labels.plansTitle"
+        [description]="labels.plansDescription"
+        [backLink]="basePath"
+      />
+    }
+
+    @if (isAppleManaged()) {
+      <div class="dbl-note">
+        <i class="fa-brands fa-apple" aria-hidden="true"></i>
+        <p>
+          Sua assinatura foi comprada na App Store, então a troca de plano acontece por lá. Esta
+          tela está em modo consulta.
+        </p>
+      </div>
+    }
+
+    @if (isLoading()) {
+      <dbl-state mode="loading" [spinner]="true" loadingLabel="Carregando planos" />
+    } @else if (isEmpty()) {
+      <dbl-state
+        mode="empty"
+        icon="fa-solid fa-tags"
+        title="Nenhum plano disponível"
+        message="Não encontramos planos para este ciclo de cobrança. Tente novamente em instantes."
+      >
+        <div state-actions>
+          <ds-button variant="outline" (click)="reloadPlans()">Recarregar</ds-button>
+        </div>
+      </dbl-state>
+    } @else {
+      <!-- Alternância mensal / anual -->
+      <div class="dbl-toggle" role="group" aria-label="Ciclo de cobrança">
+        <button
+          type="button"
+          class="dbl-toggle__option"
+          [class.dbl-toggle__option--on]="interval() === 'month'"
+          [attr.aria-pressed]="interval() === 'month'"
+          (click)="setInterval('month')"
+        >
+          Mensal
+        </button>
+        <button
+          type="button"
+          class="dbl-toggle__option"
+          [class.dbl-toggle__option--on]="interval() === 'year'"
+          [attr.aria-pressed]="interval() === 'year'"
+          (click)="setInterval('year')"
+        >
+          Anual
+          @if (annualSavings() > 0) {
+            <span class="dbl-toggle__save">-{{ annualSavings() }}%</span>
+          }
+        </button>
+      </div>
+
+      <div class="dbl-plans">
+        @for (plan of visiblePlans(); track plan.priceId; let i = $index) {
+          <article
+            class="dbl-plan-card"
+            [class.dbl-plan-card--featured]="isHighlighted(plan)"
+            [class.dbl-plan-card--current]="isCurrent(plan)"
+          >
+            @if (isHighlighted(plan)) {
+              <span class="dbl-plan-card__ribbon">
+                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                Mais popular
+              </span>
+            }
+
+            <header class="dbl-plan-card__head">
+              <h2>{{ plan.name }}</h2>
+              @if (isCurrent(plan)) {
+                <span class="dbl-badge dbl-badge--success">Seu plano</span>
+              }
+            </header>
+
+            <div class="dbl-plan-card__price">
+              <strong>{{ priceLabel(plan) }}</strong>
+              @if (priceSuffix(plan)) {
+                <span>{{ priceSuffix(plan) }}</span>
+              }
+            </div>
+
+            @if (priceFootnote(plan)) {
+              <p class="dbl-plan-card__footnote">{{ priceFootnote(plan) }}</p>
+            }
+
+            @if (features(plan).length > 0) {
+              <p class="dbl-plan-card__intro">{{ featuresIntro(i) }}</p>
+              <ul class="dbl-plan-card__features">
+                @for (feature of features(plan); track feature) {
+                  <li>
+                    <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                    <span>{{ feature }}</span>
+                  </li>
+                }
+              </ul>
+            }
+
+            <div class="dbl-plan-card__cta">
+              @if (isAppleManaged()) {
+                <ds-button variant="outline" [fullWidth]="true" (click)="manageOnAppStore()">
+                  Gerenciar na App Store
+                </ds-button>
+              } @else {
+                <ds-button
+                  [variant]="isHighlighted(plan) ? 'primary' : 'outline'"
+                  [fullWidth]="true"
+                  [disabled]="isCtaDisabled(plan)"
+                  (click)="selectPlan(plan)"
+                >
+                  {{ ctaLabel(plan) }}
+                </ds-button>
+              }
+            </div>
+          </article>
+        }
+      </div>
+
+      <p class="dbl-plans__note">
+        Você pode trocar de plano ou cancelar quando quiser — o acesso continua até o fim do período
+        já pago.
+      </p>
+    }
+  </div>
+</div>

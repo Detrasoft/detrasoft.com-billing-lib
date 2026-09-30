@@ -1,0 +1,129 @@
+<div class="dbl-page">
+  <div class="dbl-container dbl-stack">
+    @if (showHeader()) {
+      <dbl-page-header
+        eyebrow="Conta"
+        title="Cancelar assinatura"
+        description="Sentiremos sua falta. Você mantém acesso aos recursos pagos até o fim do período vigente."
+        [backLink]="basePath"
+      />
+    }
+
+    @if (store.loading() && !store.loaded()) {
+      <dbl-state mode="loading" loadingLabel="Carregando dados da assinatura" />
+    } @else if (!subscription()) {
+      <dbl-state
+        mode="empty"
+        icon="fa-solid fa-circle-info"
+        title="Nenhuma assinatura ativa"
+        message="Você está no plano gratuito e não tem assinatura para cancelar."
+      >
+        <div state-actions>
+          <ds-button variant="primary" (click)="back()">Voltar</ds-button>
+        </div>
+      </dbl-state>
+    } @else {
+      <section class="dbl-card dbl-warning-card">
+        <div class="dbl-warning-card__icon" aria-hidden="true">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div class="dbl-warning-card__content">
+          <h2>Você está prestes a cancelar o plano {{ planName() }}</h2>
+          <p>
+            O cancelamento será agendado para <strong>{{ date(cancelOn()) }}</strong> — o fim do
+            período que você já pagou. Até lá, você mantém acesso completo a todos os recursos do
+            seu plano.
+          </p>
+        </div>
+      </section>
+
+      <section class="dbl-card dbl-impact">
+        <div class="dbl-section-title">
+          <strong>O que acontece após o cancelamento</strong>
+        </div>
+
+        <ul class="dbl-impact__list">
+          <li class="dbl-impact__item dbl-impact__item--loss">
+            <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+            <div>
+              <strong>Perda de recursos premium</strong>
+              <p>
+                Projetos ilimitados, boards adicionais, armazenamento extra e outras vantagens do
+                plano pago deixam de estar disponíveis.
+              </p>
+            </div>
+          </li>
+
+          <li class="dbl-impact__item dbl-impact__item--loss">
+            <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+            <div>
+              <strong>Retorno ao plano gratuito</strong>
+              <p>
+                Sua conta volta aos limites do plano gratuito. Dados que ultrapassarem esses
+                limites ficam inacessíveis, mas não são excluídos.
+              </p>
+            </div>
+          </li>
+
+          <li class="dbl-impact__item dbl-impact__item--ok">
+            <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+            <div>
+              <strong>Seus dados permanecem seguros</strong>
+              <p>
+                Nada é excluído. Você pode reativar sua assinatura a qualquer momento para voltar a
+                usar tudo como antes.
+              </p>
+            </div>
+          </li>
+
+          <li class="dbl-impact__item dbl-impact__item--ok">
+            <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+            <div>
+              <strong>Sem cobranças futuras</strong>
+              <p>
+                Após o fim do período vigente, nenhuma cobrança será feita. Você não precisa de
+                mais nenhuma ação.
+              </p>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="dbl-card dbl-confirm">
+        <div class="dbl-note dbl-note--danger">
+          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+          <p>
+            Esta ação <strong>não pode ser desfeita</strong> sem entrar em contato com o suporte.
+            Se houver algo que possamos fazer para melhorar sua experiência, adoraríamos ouvir.
+          </p>
+        </div>
+
+        <label class="dbl-confirm__check">
+          <input
+            type="checkbox"
+            [checked]="confirmed()"
+            (change)="toggleConfirmation($any($event.target).checked)"
+          />
+          <span>
+            Li e entendi as consequências. Quero cancelar minha assinatura ao fim do período
+            vigente.
+          </span>
+        </label>
+
+        <div class="dbl-actions dbl-actions--end">
+          <ds-button variant="ghost" [disabled]="cancelling()" (click)="back()">
+            Manter assinatura
+          </ds-button>
+          <ds-button
+            variant="danger"
+            [loading]="cancelling()"
+            [disabled]="!confirmed() || cancelling()"
+            (click)="cancel()"
+          >
+            Confirmar cancelamento
+          </ds-button>
+        </div>
+      </section>
+    }
+  </div>
+</div>

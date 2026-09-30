@@ -1,0 +1,148 @@
+@use '../../styles/billing-shared' as *;
+
+:host {
+  display: block;
+}
+
+/* ── Card de aviso ────────────────────────────────────────────────────── */
+
+.dbl-warning-card {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  border: 1.5px solid var(--dbl-warning-soft, rgba(234, 179, 8, 0.35));
+  background: var(--dbl-warning-soft, rgba(234, 179, 8, 0.06));
+}
+
+.dbl-warning-card__icon {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  background: var(--dbl-warning-soft, rgba(234, 179, 8, 0.14));
+  color: var(--dbl-warning-strong, #a16207);
+}
+
+.dbl-warning-card__content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--dbl-text, #2a2440);
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--dbl-text-muted, #6b6483);
+  }
+}
+
+/* ── Impactos ─────────────────────────────────────────────────────────── */
+
+.dbl-impact {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.dbl-impact__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.dbl-impact__item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem 1.15rem;
+  border-radius: var(--dbl-radius-md, 14px);
+  border: 1.5px solid transparent;
+
+  i {
+    flex: 0 0 auto;
+    margin-top: 0.15rem;
+    font-size: 1.1rem;
+  }
+
+  strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--dbl-text, #2a2440);
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--dbl-text-muted, #6b6483);
+  }
+
+  &--loss {
+    background: var(--dbl-danger-soft, rgba(248, 113, 113, 0.06));
+    border-color: var(--dbl-danger-soft, rgba(248, 113, 113, 0.25));
+
+    i {
+      color: var(--dbl-danger-strong, #b91c1c);
+    }
+  }
+
+  &--ok {
+    background: var(--dbl-success-soft, rgba(34, 197, 94, 0.06));
+    border-color: var(--dbl-success-soft, rgba(34, 197, 94, 0.25));
+
+    i {
+      color: var(--dbl-success-strong, #16a34a);
+    }
+  }
+}
+
+/* ── Confirmação ──────────────────────────────────────────────────────── */
+
+.dbl-confirm {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.dbl-confirm__check {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+  padding: 0.9rem 1.1rem;
+  cursor: pointer;
+  border-radius: var(--dbl-radius-md, 14px);
+  background: var(--dbl-surface-sunken, #f3f0fb);
+  transition: background var(--dbl-transition, 180ms ease);
+
+  &:hover {
+    background: var(--dbl-surface-raised, #e9e5f5);
+  }
+
+  input[type='checkbox'] {
+    flex: 0 0 auto;
+    margin-top: 0.15rem;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--dbl-primary, #896ff4);
+  }
+
+  span {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--dbl-text, #2a2440);
+  }
+}

@@ -1,0 +1,176 @@
+<div class="dbl-page">
+  <div class="dbl-container dbl-stack">
+    @if (showHeader()) {
+      <dbl-page-header
+        eyebrow="Conta"
+        title="Confirmar assinatura"
+        description="Revise os valores antes de concluir. Nenhuma cobrança acontece sem sua confirmação."
+        [backLink]="basePath + '/plans'"
+      />
+    }
+
+    @if (redirecting()) {
+      <section class="dbl-card dbl-success">
+        <span class="dbl-success__icon" aria-hidden="true">
+          <i class="fa-solid fa-circle-check"></i>
+        </span>
+        <h2>Tudo certo!</h2>
+        <p>
+          Estamos abrindo o ambiente seguro de pagamento para você concluir a assinatura do plano
+          <strong>{{ plan()?.name }}</strong>.
+        </p>
+        <p class="dbl-success__hint">
+          <i class="fa-solid fa-lock" aria-hidden="true"></i>
+          Pagamento processado pelo Stripe. Não armazenamos dados do seu cartão.
+        </p>
+      </section>
+    } @else if (loading()) {
+      <dbl-state mode="loading" [spinner]="true" loadingLabel="Calculando valores do plano" />
+    } @else if (error()) {
+      <dbl-state mode="error" [message]="error()!" [showRetry]="false">
+        <div state-actions>
+          <ds-button variant="primary" (click)="backToPlans()">Voltar aos planos</ds-button>
+        </div>
+      </dbl-state>
+    } @else {
+      <!-- Plano escolhido -->
+      <section class="dbl-card dbl-chosen">
+        <span class="dbl-badge dbl-badge--primary">Plano selecionado</span>
+        <div class="dbl-chosen__head">
+          <h2>{{ plan()?.name }}</h2>
+          <strong class="dbl-chosen__price">{{ planPriceLabel() }}</strong>
+        </div>
+
+        @if (features().length > 0) {
+          <ul class="dbl-chosen__features">
+            @for (feature of features(); track feature) {
+              <li>
+                <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                <span>{{ feature }}</span>
+              </li>
+            }
+            @if (extraFeatureCount() > 0) {
+              <li class="dbl-chosen__more">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                <span>mais {{ extraFeatureCount() }} recursos incluídos</span>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+
+      <!-- Detalhes da cobrança -->
+      <section class="dbl-card dbl-billing">
+        <div class="dbl-section-title">
+          <strong>Detalhes da cobrança</strong>
+          <small>Valores calculados para a sua conta agora.</small>
+        </div>
+
+        <div class="dbl-detail-grid">
+          <div class="dbl-detail">
+            <span>Início do ciclo</span>
+            <strong>{{ date(simulation()?.billingCycleStart) }}</strong>
+          </div>
+          <div class="dbl-detail">
+            <span>Fim do ciclo</span>
+            <strong>{{ date(simulation()?.billingCycleEnd) }}</strong>
+          </div>
+
+          @if (hasTrial()) {
+            <div class="dbl-detail dbl-detail--full">
+              <span>Período de teste</span>
+              <strong>Gratuito até {{ date(simulation()?.trialEndDate) }}</strong>
+              <small>A primeira cobrança só acontece após esta data.</small>
+            </div>
+          }
+
+          @if (simulation()?.activeUsers) {
+            <div class="dbl-detail">
+              <span>Usuários ativos</span>
+              <strong>{{ simulation()?.activeUsers }}</strong>
+            </div>
+          }
+        </div>
+
+        @if (invoiceLines().length > 0) {
+          <div class="dbl-lines">
+            <span class="dbl-eyebrow">Itens da próxima fatura</span>
+            @for (line of invoiceLines(); track $index) {
+              <div class="dbl-lines__row">
+                <div class="dbl-lines__info">
+                  <strong>{{ line.description }}</strong>
+                  @if (line.periodStart || line.periodEnd) {
+                    <small>{{ date(line.periodStart) }} – {{ date(line.periodEnd) }}</small>
+                  }
+                </div>
+                <span class="dbl-lines__amount">{{ line.amount }}</span>
+              </div>
+            }
+          </div>
+        }
+
+        <hr class="dbl-divider" />
+
+        <div class="dbl-total">
+          <div>
+            <span class="dbl-eyebrow">Total da próxima fatura</span>
+            @if (hasTrial()) {
+              <small>Cobrado ao fim do período de teste.</small>
+            }
+          </div>
+          <strong>{{ totalLabel() }}</strong>
+        </div>
+
+        @if (simulation()?.message) {
+          <div class="dbl-note">
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+            <p>{{ simulation()?.message }}</p>
+          </div>
+        }
+      </section>
+
+      <!-- Avisos -->
+      <section class="dbl-card dbl-terms">
+        <div class="dbl-section-title">
+          <strong>Antes de confirmar</strong>
+        </div>
+        <ul class="dbl-terms__list">
+          <li>
+            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+            <span>O pagamento é processado pelo Stripe. Não armazenamos dados do seu cartão.</span>
+          </li>
+          @if (isUpgrade()) {
+            <li>
+              <i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>
+              <span>
+                Sua assinatura atual será substituída por este plano, com ajuste proporcional dos
+                valores já pagos.
+              </span>
+            </li>
+          }
+          <li>
+            <i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
+            <span>
+              A renovação é automática e pode ser cancelada quando quiser — o acesso continua até o
+              fim do período pago.
+            </span>
+          </li>
+        </ul>
+
+        <div class="dbl-actions dbl-actions--end">
+          <ds-button variant="ghost" [disabled]="confirming()" (click)="backToPlans()">
+            Voltar aos planos
+          </ds-button>
+          <ds-button
+            variant="primary"
+            [loading]="confirming()"
+            [disabled]="confirming()"
+            (click)="confirm()"
+          >
+            Confirmar e prosseguir
+          </ds-button>
+        </div>
+      </section>
+    }
+  </div>
+</div>

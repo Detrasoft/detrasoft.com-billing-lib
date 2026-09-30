@@ -1,0 +1,59 @@
+# ============================================================================
+# GitHub Actions — Publish @detrasoft.com/billing to Verdaccio
+# ============================================================================
+
+name: Publish @detrasoft.com/billing
+
+on:
+  push:
+    tags:
+      - 'v*'   # Ex: v0.1.0, v1.2.3
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  NODE_VERSION: 20
+  REGISTRY_URL: https://npm.detrasoft.com
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.REGISTRY_URL }}
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          TAG=${GITHUB_REF#refs/tags/v}
+          echo "version=$TAG" >> $GITHUB_OUTPUT
+          echo "📦 Publishing version: $TAG"
+
+      - name: Set version
+        run: npm version ${{ steps.version.outputs.version }} --no-git-tag-version
+
+      - name: Publish to Verdaccio
+        run: npm publish --registry ${{ env.REGISTRY_URL }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Verify publication
+        run: |
+          sleep 3
+          npm view @detrasoft.com/billing@${{ steps.version.outputs.version }} \
+            --registry ${{ env.REGISTRY_URL }} || true
